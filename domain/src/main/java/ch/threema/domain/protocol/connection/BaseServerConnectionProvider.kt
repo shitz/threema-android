@@ -144,6 +144,7 @@ object BaseServerConnectionProvider {
             configuration.incomingMessageProcessor,
             configuration.taskManager as InternalTaskManager,
             connectionLockProvider,
+            configuration.echoRequestInterval,
         )
 
         return ServerConnectionDependencies(controllers.mainController, socket, layers, connectionLockProvider, configuration.taskManager)
@@ -156,12 +157,13 @@ object BaseServerConnectionProvider {
         incomingMessageProcessor: IncomingMessageProcessor,
         taskManager: InternalTaskManager,
         connectionLockProvider: ConnectionLockProvider,
+        echoRequestInterval: Short,
     ): ServerConnectionLayers {
         return ServerConnectionLayers(
             CspFrameLayer(),
             MultiplexLayer(controllers.serverConnectionController),
             AuthLayer(controllers.layer3Controller),
-            MonitoringLayer(connection, controllers.layer4Controller),
+            MonitoringLayer(connection, controllers.layer4Controller, echoRequestInterval),
             EndToEndLayer(
                 dispatcher,
                 controllers.serverConnectionController,

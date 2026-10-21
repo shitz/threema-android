@@ -123,6 +123,30 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/scion_api_key_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/grid_unit_x2"
+            app:counterEnabled="false"
+            app:errorEnabled="false"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:startIconDrawable="@drawable/ic_key_outline"
+            app:startIconTint="?attr/colorOnBackground">
+
+            <ch.threema.app.ui.ThreemaTextInputEditText
+                android:id="@+id/scion_api_key"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/scion_api_key_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textNoSuggestions|textPassword"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/unlock_state"
             style="@style/WizardTextBodyMedium"

@@ -26,6 +26,7 @@ import ch.threema.app.logging.ExitReasonLogger
 import ch.threema.app.monitors.MonitorController
 import ch.threema.app.notifications.NotificationIDs
 import ch.threema.app.restrictions.AppRestrictionService
+import ch.threema.app.scion.ScionTunnel
 import ch.threema.app.services.ThreemaPushService
 import ch.threema.app.services.avatarcache.AvatarCacheService
 import ch.threema.app.startup.AppProcessLifecycleObserver
@@ -112,6 +113,8 @@ class ThreemaApplication : Application() {
         setUpSecureRandom()
 
         setUpDayNightMode(this)
+
+        ScionTunnel.init(this)
 
         initDependencyInjection(this)
 

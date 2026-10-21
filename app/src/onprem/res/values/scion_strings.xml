@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scion_api_key_hint" translatable="false">SCION API key</string>
+</resources>

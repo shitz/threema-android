@@ -18,7 +18,7 @@
         android:title="@string/notifications_settings"
         android:visible="true"
         app:iconTint="?attr/colorOnSurface"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <group
         android:id="@+id/group_search"

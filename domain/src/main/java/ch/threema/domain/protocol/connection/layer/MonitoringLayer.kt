@@ -31,6 +31,7 @@ private val logger = ConnectionLoggingUtil.getConnectionLogger("MonitoringLayer"
 internal class MonitoringLayer(
     private val connection: ServerConnection,
     private val controller: Layer4Controller,
+    private val cspEchoRequestInterval: Short = ProtocolDefines.ECHO_REQUEST_INTERVAL_CSP,
 ) : Layer4Codec {
     private companion object {
         // Preserve echo sequence number across new instance creations
@@ -215,7 +216,7 @@ internal class MonitoringLayer(
             )
         } else {
             Triple(
-                ProtocolDefines.ECHO_REQUEST_INTERVAL_CSP,
+                cspEchoRequestInterval,
                 ProtocolDefines.ECHO_RESPONSE_TIMEOUT,
                 ProtocolDefines.CONNECTION_IDLE_TIMEOUT_CSP,
             )

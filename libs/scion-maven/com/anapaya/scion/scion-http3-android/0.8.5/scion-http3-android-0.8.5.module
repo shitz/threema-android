@@ -1,0 +1,150 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.anapaya.scion",
+    "module": "scion-http3-android",
+    "version": "0.8.5",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.7"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "net.java.dev.jna",
+          "module": "jna",
+          "version": {
+            "requires": "5.14.0"
+          },
+          "excludes": [
+            {
+              "group": "*",
+              "module": "*"
+            }
+          ],
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "jna",
+              "type": "aar",
+              "extension": "aar"
+            }
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "scion-http3-android-0.8.5.aar",
+          "url": "scion-http3-android-0.8.5.aar",
+          "size": 8982622,
+          "sha512": "21bfbd49ff8c8b737d8984bf278cf0fd92d398ec6bed1145ee5e8e37eea2c3597f2b48ad702be0bc51364fd2fcd86b2beafd404b21776bcd4dd09f44a13b1afa",
+          "sha256": "acc78520baa2a5a8dc8fd21d8231aea10c4d8d9ea52cdf3435798d4f7c9a15d1",
+          "sha1": "80592f5d7f67c27c7f2f06e85f407b51a71174d7",
+          "md5": "4ef337e0102e0053c3420b27a2a1e4ce"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "net.java.dev.jna",
+          "module": "jna",
+          "version": {
+            "requires": "5.14.0"
+          },
+          "excludes": [
+            {
+              "group": "*",
+              "module": "*"
+            }
+          ],
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "jna",
+              "type": "aar",
+              "extension": "aar"
+            }
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "scion-http3-android-0.8.5.aar",
+          "url": "scion-http3-android-0.8.5.aar",
+          "size": 8982622,
+          "sha512": "21bfbd49ff8c8b737d8984bf278cf0fd92d398ec6bed1145ee5e8e37eea2c3597f2b48ad702be0bc51364fd2fcd86b2beafd404b21776bcd4dd09f44a13b1afa",
+          "sha256": "acc78520baa2a5a8dc8fd21d8231aea10c4d8d9ea52cdf3435798d4f7c9a15d1",
+          "sha1": "80592f5d7f67c27c7f2f06e85f407b51a71174d7",
+          "md5": "4ef337e0102e0053c3420b27a2a1e4ce"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "scion-http3-android-0.8.5-sources.jar",
+          "url": "scion-http3-android-0.8.5-sources.jar",
+          "size": 89169,
+          "sha512": "307a44a1d24da701beb988860621c0b256850e2413d42cb73e03b0b540319eacb0d482cd6afd5f10ee6eaa5aa03ba6b2dda0b9f066b89761e70ac632de15b3f3",
+          "sha256": "8499640c1d01eb6484edce0067343d3394b85aef45e03d56be38c1806e4b4553",
+          "sha1": "948736926b10a7cb1169dba62cd8ff5d6981a8e0",
+          "md5": "25d73c299a50e11bcc54d44ac9c55a6d"
+        }
+      ]
+    }
+  ]
+}

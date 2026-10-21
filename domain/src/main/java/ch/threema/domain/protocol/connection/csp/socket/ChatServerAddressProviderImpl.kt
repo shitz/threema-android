@@ -18,6 +18,7 @@ class ChatServerAddressProviderImpl(
     private val identityStore: IdentityStore = configuration.identityStore
     private val serverAddressProvider: ServerAddressProvider = configuration.serverAddressProvider
     private val hostResolver: HostResolver = configuration.hostResolver
+    private val resolveHostLocally: Boolean = configuration.resolveHostLocally
 
     private val lock = ReentrantLock()
 
@@ -59,7 +60,7 @@ class ChatServerAddressProviderImpl(
         val serverHost = getServerHost()
 
         val ports = serverAddressProvider.getChatServerPorts()
-        val addresses = if (ProxyAwareSocketFactory.shouldUseProxy(serverHost, ports[0])) {
+        val addresses = if (!resolveHostLocally || ProxyAwareSocketFactory.shouldUseProxy(serverHost, ports[0])) {
             getAddressesWithProxy(serverHost)
         } else {
             getAddressesWithoutProxy(serverHost)

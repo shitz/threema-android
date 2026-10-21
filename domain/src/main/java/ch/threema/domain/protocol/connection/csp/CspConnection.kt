@@ -60,4 +60,15 @@ data class CspConnectionConfiguration(
     override val taskManager: TaskManager,
     val hostResolver: HostResolver,
     val socketFactory: SocketFactory,
+    /**
+     * Whether the chat server host is resolved on the device. If false, the [socketFactory] gets
+     * unresolved addresses, for example for a tunnel that resolves the host at its other end.
+     */
+    val resolveHostLocally: Boolean = true,
+    /**
+     * The interval of the echo requests, in seconds. A transport that closes idle connections
+     * sooner than [ProtocolDefines.ECHO_REQUEST_INTERVAL_CSP], for example a tunnel, needs a
+     * shorter interval.
+     */
+    val echoRequestInterval: Short = ProtocolDefines.ECHO_REQUEST_INTERVAL_CSP,
 ) : BaseServerConnectionConfiguration

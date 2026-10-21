@@ -160,7 +160,7 @@ sealed class BuildFlavor(
      * Return whether this build flavor always uses Threema Push.
      */
     val forceThreemaPush: Boolean
-        get() = this is Libre
+        get() = this is Libre || this is OnPrem
 
     /**
      * Return whether this build flavor is "libre", meaning that it contains

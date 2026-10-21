@@ -41,6 +41,7 @@ import ch.threema.app.R;
 import ch.threema.app.ThreemaApplication;
 import ch.threema.app.emojis.EmojiTextView;
 import ch.threema.app.glide.AvatarOptions;
+import ch.threema.app.scion.ScionTunnel;
 import ch.threema.app.services.BlockedIdentitiesService;
 import ch.threema.app.services.ContactService;
 import ch.threema.app.preference.service.PreferenceService;
@@ -270,6 +271,7 @@ public class ContactListAdapter extends FilterableListAdapter implements Section
         TextView contactTextBottomLeft;
         TextView contactTextBottomRight;
         VerificationLevelImageView verificationLevelView;
+        @Nullable View scionPillView;
         ImageView blockedContactView;
         EmojiTextView initialView;
         ImageView initialImageView;
@@ -301,6 +303,7 @@ public class ContactListAdapter extends FilterableListAdapter implements Section
             holder.contactTextBottomRight = itemView.findViewById(R.id.contact_text_bottom_right);
 
             holder.verificationLevelView = itemView.findViewById(R.id.verification_level);
+            holder.scionPillView = itemView.findViewById(R.id.scion_pill);
             holder.avatarView = itemView.findViewById(R.id.avatar_view);
             holder.shapeableAvatarView = itemView.findViewById(R.id.shapeable_avatar_view);
             holder.blockedContactView = itemView.findViewById(R.id.blocked_contact);
@@ -389,6 +392,8 @@ public class ContactListAdapter extends FilterableListAdapter implements Section
                 contactModel.getWorkVerificationLevel()
             );
         }
+
+        ViewUtil.show(holder.scionPillView, ScionTunnel.INSTANCE.isEnabled());
 
         ViewUtil.show(
             holder.blockedContactView,

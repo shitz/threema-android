@@ -37,6 +37,12 @@ allprojects {
         maven("https://jitpack.io")
         flatDir { dir("libs") }
 
+        // The SCION SDK, unpacked from the `-maven.zip` of its GitHub release
+        exclusiveContent {
+            forRepository { maven(rootProject.file("libs/scion-maven")) }
+            filter { includeGroup("com.anapaya.scion") }
+        }
+
         // Huawei
         exclusiveContent {
             forRepository {

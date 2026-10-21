@@ -88,6 +88,8 @@ import ch.threema.app.compose.theme.dimens.GridUnit
 import ch.threema.app.conversation.MessageViewElementFactory
 import ch.threema.app.preference.service.PreferenceService.Companion.EMOJI_STYLE_ANDROID
 import ch.threema.app.preference.service.PreferenceService.EmojiStyle
+import ch.threema.app.scion.ScionPill
+import ch.threema.app.scion.ScionTunnel
 import ch.threema.app.ui.models.MessageViewElement
 import ch.threema.app.usecases.conversations.AvatarIteration
 import ch.threema.app.utils.MessageUtil
@@ -519,6 +521,10 @@ private fun FirstLine(
             markupEnabled = false,
             highlightFeature = HighlightFeature.Off,
         )
+        if (ScionTunnel.isEnabled) {
+            SpacerHorizontal(GridUnit.x1)
+            ScionPill()
+        }
         if (isPinned && groupCall == null) {
             SpacerHorizontal(GridUnit.x0_5)
             Icon(

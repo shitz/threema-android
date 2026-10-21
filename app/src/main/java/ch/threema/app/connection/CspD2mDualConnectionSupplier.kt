@@ -3,6 +3,7 @@ package ch.threema.app.connection
 import android.os.PowerManager
 import ch.threema.app.BuildConfig
 import ch.threema.app.multidevice.MultiDeviceManager
+import ch.threema.app.scion.ScionTunnel
 import ch.threema.app.services.ServerAddressProviderService
 import ch.threema.app.startup.AppStartupMonitor
 import ch.threema.base.utils.getThreemaLogger
@@ -19,6 +20,7 @@ import ch.threema.domain.protocol.connection.csp.socket.HostResolver
 import ch.threema.domain.protocol.connection.csp.socket.ProxyAwareSocketFactory
 import ch.threema.domain.protocol.connection.d2m.D2mConnectionConfiguration
 import ch.threema.domain.protocol.connection.util.ConnectionLoggingUtil
+import ch.threema.domain.protocol.csp.ProtocolDefines
 import ch.threema.domain.stores.IdentityStore
 import ch.threema.domain.taskmanager.IncomingMessageProcessor
 import ch.threema.domain.taskmanager.TaskManager
@@ -130,7 +132,15 @@ class CspD2mDualConnectionSupplier(
             incomingMessageProcessor = incomingMessageProcessor,
             taskManager = taskManager,
             hostResolver = HostResolver(),
-            socketFactory = ProxyAwareSocketFactory::makeSocket,
+            socketFactory = { address ->
+                if (ScionTunnel.isEnabled) ScionTunnel.newSocket() else ProxyAwareSocketFactory.makeSocket(address)
+            },
+            resolveHostLocally = !ScionTunnel.isEnabled,
+            echoRequestInterval = if (ScionTunnel.isEnabled) {
+                ScionTunnel.ECHO_REQUEST_INTERVAL
+            } else {
+                ProtocolDefines.ECHO_REQUEST_INTERVAL_CSP
+            },
         )
     }
 

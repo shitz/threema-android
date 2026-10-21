@@ -198,6 +198,8 @@ import ch.threema.app.messagereceiver.SendingPermissionValidationResult;
 import ch.threema.app.multidevice.MultiDeviceManager;
 import ch.threema.app.preference.service.PreferenceService;
 import ch.threema.app.routines.MarkAsReadRoutine;
+import ch.threema.app.scion.ScionNoticeMessageModel;
+import ch.threema.app.scion.ScionTunnel;
 import ch.threema.app.services.ActivityService;
 import ch.threema.app.services.BlockedIdentitiesService;
 import ch.threema.app.services.ContactService;
@@ -269,6 +271,7 @@ import ch.threema.app.utils.ShortcutUtil;
 import ch.threema.app.utils.SoundEffectPlayer;
 import ch.threema.app.utils.TapTargetViewUtil;
 import ch.threema.app.utils.ToolbarUtil;
+import ch.threema.app.utils.ViewUtil;
 import ch.threema.app.voicemessage.VoiceRecorderActivity;
 import ch.threema.app.voip.groupcall.GroupCallDescription;
 import ch.threema.app.voip.groupcall.GroupCallManager;
@@ -529,6 +532,7 @@ public class ComposeMessageFragment extends Fragment implements
     private EmojiTextView actionBarTitleTextView;
     private TextView actionBarSubtitleTextView;
     private VerificationLevelImageView actionBarSubtitleImageView;
+    private @Nullable View actionBarScionPillView;
     private AvatarView actionBarAvatarView;
     private ImageView wallpaperView;
     private ActionBar actionBar;
@@ -2358,6 +2362,7 @@ public class ComposeMessageFragment extends Fragment implements
         if (actionBarTitleView != null) {
             this.actionBarTitleTextView = actionBarTitleView.findViewById(R.id.title);
             this.actionBarSubtitleImageView = actionBarTitleView.findViewById(R.id.subtitle_image);
+            this.actionBarScionPillView = actionBarTitleView.findViewById(R.id.subtitle_scion_pill);
             this.actionBarSubtitleTextView = actionBarTitleView.findViewById(R.id.subtitle_text);
             this.actionBarAvatarView = actionBarTitleView.findViewById(R.id.avatar_view);
             final RelativeLayout actionBarTitleContainer = actionBarTitleView.findViewById(R.id.title_container);
@@ -3038,7 +3043,9 @@ public class ComposeMessageFragment extends Fragment implements
         synchronized (this.messageValues) {
             int size = this.messageValues.size();
             Instant date = Instant.now();
-            Instant createdAt = size > 0 ? this.messageValues.get(size - 1).getCreatedAt() : Instant.EPOCH;
+            AbstractMessageModel lastValue = size > 0 ? this.messageValues.get(size - 1) : null;
+            // the SCION notice alone in an empty chat must not stop the first message's date separator
+            Instant createdAt = lastValue != null && !(lastValue instanceof ScionNoticeMessageModel) ? lastValue.getCreatedAt() : Instant.EPOCH;
 
             if (!isSameDayAs(date, createdAt)) {
                 final DateSeparatorMessageModel dateSeparatorMessageModel = new DateSeparatorMessageModel();
@@ -3156,6 +3163,10 @@ public class ComposeMessageFragment extends Fragment implements
             if (clear) {
                 this.messageValues.clear();
             } else {
+                // older messages go above the SCION notice, so remove it and add it again on top below
+                if (!this.messageValues.isEmpty() && this.messageValues.get(0) instanceof ScionNoticeMessageModel) {
+                    this.messageValues.remove(0);
+                }
                 // prevent duplicate date separators when adding messages to an existing chat (e.g. after pull-to-refresh)
                 if (!this.messageValues.isEmpty()) {
                     if (this.messageValues.get(0) instanceof DateSeparatorMessageModel) {
@@ -3192,6 +3203,12 @@ public class ComposeMessageFragment extends Fragment implements
                 final DateSeparatorMessageModel dateSeparatorMessageModel = new DateSeparatorMessageModel();
                 dateSeparatorMessageModel.setCreatedAt(this.messageValues.get(0).getCreatedAt());
                 this.messageValues.add(0, dateSeparatorMessageModel);
+            }
+
+            // a page shorter than a full one means the beginning of the chat is loaded
+            if (ScionTunnel.INSTANCE.isEnabled() && values.size() < MESSAGE_PAGE_SIZE) {
+                Instant noticeDate = this.messageValues.isEmpty() ? Instant.now() : this.messageValues.get(0).getCreatedAt();
+                this.messageValues.add(0, new ScionNoticeMessageModel(getString(R.string.scion_chat_notice), noticeDate));
             }
 
             this.listInitializedAt = Instant.now();
@@ -3925,7 +3942,8 @@ public class ComposeMessageFragment extends Fragment implements
             return false;
         }
 
-        if (selectedMessage == null) {
+        if (selectedMessage == null || selectedMessage instanceof ScionNoticeMessageModel) {
+            // the SCION notice is not a stored message, so it cannot be selected
             return false;
         }
 
@@ -4474,6 +4492,7 @@ public class ComposeMessageFragment extends Fragment implements
 
         this.actionBarSubtitleTextView.setVisibility(View.GONE);
         this.actionBarSubtitleImageView.setVisibility(View.GONE);
+        ViewUtil.show(this.actionBarScionPillView, false);
         this.actionBarAvatarView.setVisibility(View.VISIBLE);
 
         this.actionBarTitleTextView.setText(
@@ -4522,6 +4541,7 @@ public class ComposeMessageFragment extends Fragment implements
                     contactModel.getWorkVerificationLevel()
                 );
                 this.actionBarSubtitleImageView.setVisibility(View.VISIBLE);
+                ViewUtil.show(this.actionBarScionPillView, ScionTunnel.INSTANCE.isEnabled());
                 if (actionBarAvatarView.getAvatarView().isAttachedToWindow()) {
                     contactService.loadAvatarIntoImage(
                         contactModel.getIdentity(),
@@ -4696,8 +4716,9 @@ public class ComposeMessageFragment extends Fragment implements
             this.mutedMenuItem.setIcon(R.drawable.ic_notifications_off_outline);
             this.mutedMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } else {
+            // Default notifications: keep the bell in the overflow menu, so the toolbar has room for the title.
             this.mutedMenuItem.setIcon(R.drawable.ic_notifications_active_outline);
-            this.mutedMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            this.mutedMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         }
     }
 

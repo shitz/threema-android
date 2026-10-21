@@ -76,6 +76,11 @@ android {
         versionCode = defaultVersionCode
         versionName = "$appVersion$betaSuffix"
 
+        // The Anapaya AA that exchanges the SCION API key for tokens
+        stringBuildConfigField("SCION_AA_URL", "https://auth.scion.anapaya.net")
+        // The endhost API that the SCION client gets its connectivity from
+        stringBuildConfigField("SCION_ENDHOST_API_URL", "https://s01.chgtg1.snap.anapaya.net:5001")
+
         setProductNames(
             appName = "Threema",
         )
@@ -192,7 +197,8 @@ android {
             if (project.hasProperty("noAbiSplits")) {
                 isUniversalApk = true
             } else {
-                include("armeabi-v7a", "x86", "arm64-v8a", "x86_64")
+                // The SCION SDK has no native library for armeabi-v7a and x86
+                include("arm64-v8a", "x86_64")
                 isUniversalApk = project.hasProperty("buildUniversalApk")
             }
         }
@@ -983,6 +989,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
 
+    // SCION tunnel. Threema ships its own JNA, with libjnidispatch.so in app/libs/.
+    implementation("com.anapaya.scion:scion-http3-android:0.8.5") {
+        exclude(group = "net.java.dev.jna")
+    }
+
     // Google Play Services and related libraries
     "noneImplementation"(libs.playServices.base)
     "store_googleImplementation"(libs.playServices.base)
@@ -1055,7 +1066,7 @@ cargo {
     libname = "libthreema" // must match the Cargo.toml's package name
     profile = "release"
     pythonCommand = "python3"
-    targets = listOf("x86_64", "arm64", "arm", "x86")
+    targets = listOf("x86_64", "arm64")
     features {
         defaultAnd(arrayOf("uniffi"))
     }

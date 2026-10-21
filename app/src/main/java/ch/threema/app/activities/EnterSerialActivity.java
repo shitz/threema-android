@@ -34,6 +34,7 @@ import ch.threema.app.ui.interop.ButtonPrimaryXml;
 import ch.threema.app.di.DependencyContainer;
 import ch.threema.app.dialogs.GenericProgressDialog;
 import ch.threema.app.restrictions.AppRestrictionService;
+import ch.threema.app.scion.ScionTunnel;
 import ch.threema.app.services.license.LicenseService;
 import ch.threema.app.services.license.LicenseServiceUser;
 import ch.threema.domain.models.SerialCredentials;
@@ -67,6 +68,7 @@ public class EnterSerialActivity extends ThreemaActivity {
     private static final String DIALOG_TAG_CHECKING = "check";
     private TextView stateTextView = null;
     private EditText licenseKeyOrUsernameText, passwordText, serverText;
+    private @Nullable EditText scionApiKeyText;
     private MaterialButton unlockButton;
     private ButtonPrimaryXml loginButtonCompose;
 
@@ -104,6 +106,7 @@ public class EnterSerialActivity extends ThreemaActivity {
         licenseKeyOrUsernameText = findViewById(R.id.license_key);
         passwordText = findViewById(getResources().getIdentifier("password", "id", getPackageName()));
         serverText = findViewById(getResources().getIdentifier("server", "id", getPackageName()));
+        scionApiKeyText = findViewById(getResources().getIdentifier("scion_api_key", "id", getPackageName()));
 
         // Workaround to fix the prefix in the TextInputLayout not being aligned correctly when the phones font size changes
         // Open Issue: https://github.com/material-components/material-components-android/issues/773
@@ -372,6 +375,10 @@ public class EnterSerialActivity extends ThreemaActivity {
             String effectiveServerUrl = configuredServerUrl != null ? configuredServerUrl : serverText.getText().toString();
 
             if (!isNullOrEmpty(effectiveUsername) && !isNullOrEmpty(effectivePassword) && !isNullOrEmpty(effectiveServerUrl)) {
+                if (scionApiKeyText != null) {
+                    // Before the check, because the check fetches the OPPF through the tunnel.
+                    ScionTunnel.INSTANCE.setApiKey(scionApiKeyText.getText().toString());
+                }
                 this.check(new UserCredentials(effectiveUsername, effectivePassword), effectiveServerUrl);
             } else {
                 this.setLoginButtonEnabled(true);

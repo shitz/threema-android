@@ -2,6 +2,7 @@ package ch.threema.app.di.modules
 
 import ch.threema.app.di.Qualifiers
 import ch.threema.app.onprem.OnPremCertPinning
+import ch.threema.app.scion.ScionTunnel
 import ch.threema.app.utils.ConfigUtils
 import ch.threema.base.HAS_DEV_FEATURES
 import ch.threema.base.utils.getThreemaLogger
@@ -30,6 +31,9 @@ val okHttpClientsModule = module {
 private fun buildBaseOkHttpClient(): OkHttpClient =
     OkHttpClient.Builder()
         .apply {
+            socketFactory(ScionTunnel.socketFactory)
+            dns(ScionTunnel.dns)
+            proxySelector(ScionTunnel.proxySelector)
             connectTimeout(ProtocolDefines.CONNECT_TIMEOUT.seconds)
             writeTimeout(ProtocolDefines.WRITE_TIMEOUT.seconds)
             readTimeout(ProtocolDefines.READ_TIMEOUT.seconds)

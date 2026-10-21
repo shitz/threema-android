@@ -91,7 +91,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:minHeight="@dimen/listitem_min_height_first_line"
         android:singleLine="true"
@@ -99,8 +99,9 @@
         android:textColor="@null"
         app:layout_constraintBottom_toTopOf="@+id/contact_text_bottom_left"
         app:layout_constraintLeft_toRightOf="@id/avatar_view"
-        app:layout_constraintRight_toLeftOf="@+id/verification_level"
+        app:layout_constraintRight_toLeftOf="@+id/scion_pill"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="32dp"
         tools:text="Firstname Lastname" />
     <!-- textColor="@null" -> https://stackoverflow.com/a/45198884 -->
 
@@ -140,5 +141,15 @@
         app:layout_constraintTop_toTopOf="@id/contact_text_top_left"
         app:srcCompat="@drawable/ic_verification_none"
         tools:srcCompat="@drawable/ic_verification_server" />
+
+    <TextView
+        android:id="@+id/scion_pill"
+        style="@style/Threema.ScionPill"
+        android:layout_marginEnd="6dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/verification_level"
+        app:layout_constraintEnd_toStartOf="@id/verification_level"
+        app:layout_constraintTop_toTopOf="@id/verification_level"
+        tools:visibility="visible" />
 
 </ch.threema.app.ui.CheckableConstraintLayout>

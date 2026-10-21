@@ -84,7 +84,9 @@ afterEvaluate {
     // Define the task to generate libthreema library (only used to generate bindings for it)
     val generateLibthreema = tasks.register<Exec>("generateLibthreema") {
         workingDir("${project.projectDir}/libthreema")
-        commandLine("cargo", "build", "-F", "uniffi", "-p", "libthreema", "--release", "--locked")
+        // An explicit target directory, because a global `target-dir` in the cargo configuration
+        // moves the library away from the path that generateUniFFIBindings reads.
+        commandLine("cargo", "build", "-F", "uniffi", "-p", "libthreema", "--release", "--locked", "--target-dir", "target")
     }
 
     // Define the task to generate the uniffi bindings for libthreema
